@@ -43,7 +43,7 @@
 
 const width = 800
 const height = 600
-const margin = ({top: 20, right: 0, bottom: 80, left: 50})
+const margin = ({top: 20, right: 0, bottom: 120, left: 50})
 
 const parseTime = d3.timeParse("%d-%b-%y")
 const formatTime = d3.timeFormat("%b %d")
@@ -67,7 +67,7 @@ const data = d3.tsv("data.tsv", function(d) {
     .range([height - margin.bottom, margin.top])
 
   const xAxis = g => g
-    .attr("transform", `translate(0,${height - margin.bottom + 30})`)
+    .attr("transform", `translate(0,${height - margin.bottom + 70})`)
     .call(d3.axisBottom(x).tickFormat(i => formatTime(data[i].date)).ticks(data.length))
 
   const yAxis = g => g
@@ -91,10 +91,17 @@ const data = d3.tsv("data.tsv", function(d) {
       .attr("width", x.bandwidth());
 
   svg.append("g")
-      .call(xAxis);
+    .attr("transform", `translate(0,${height - margin.bottom + 20})`)
+    .selectAll("g")
+    .data(data)
+    .join("image")
+      .attr("x", (d, i) => x(i) + 4)
+      .attr("href", d => d.game === 'vanilla' ? 'xcom.png' : 'exalt-logo.png')
+      .attr("width", "20")
+      .attr("height", "20")
 
   svg.append("g")
-    .attr("transform", `translate(0,${height - margin.bottom + 20})`)
+    .attr("transform", `translate(0,${height - margin.bottom + 60})`)
     .selectAll("g")
     .data(data)
     .join("text")
@@ -102,6 +109,9 @@ const data = d3.tsv("data.tsv", function(d) {
       .attr("fill", d => d.group === '👤' ? '#ef14ef' : 'white')
       .style("text-anchor", "middle")
       .text(d => d.group)
+
+  svg.append("g")
+      .call(xAxis);
 
   svg.append("g")
       .call(yAxis);
@@ -112,7 +122,7 @@ svg.append("text")
       .attr("dy", "1em")
       .attr("font-size", "35px")
       .style("text-anchor", "left")
-      .text("XCOM: Evolution Score Card");  
+      .text("XCOM Score Card");  
 
 svg.append("text")
       .attr("transform", "rotate(-90)")

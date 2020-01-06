@@ -1,16 +1,26 @@
-date	score	group
-04-Jan-20	-50	👪
-04-Jan-20	-50	👪
-04-Jan-20	-50	👪
-04-Jan-20	-50	👪
-04-Jan-20	-50	👪
-04-Jan-20	-50	👪
-04-Jan-20	-50	👪
-05-Jan-20	1	👤
-05-Jan-20	-50	👪
-05-Jan-20	-50	👪
-05-Jan-20	-50	👤
-05-Jan-20	-50	👤
-05-Jan-20	-50	👤
-06-Jan-20	-44	👤
-06-Jan-20	52	👤
+date	score	group	mission	game
+01-Jan-20	20	👪	Domination	vanilla
+02-Jan-20	20	👪	Infiltration	vanilla
+02-Jan-20	20	👪	Misdirection	vanilla
+03-Jan-20	20	👪	Onslaught	vanilla
+03-Jan-20	20	👪	Occupation	vanilla
+01-Jan-20	20	👤	Domination	vanilla
+02-Jan-20	20	👤	Infiltration	vanilla
+02-Jan-20	20	👤	Misdirection	vanilla
+03-Jan-20	20	👤	Onslaught	vanilla
+03-Jan-20	20	👤	Occupation	vanilla
+04-Jan-20	-50	👪	-	evolution
+04-Jan-20	-50	👪	-	evolution
+04-Jan-20	-50	👪	-	evolution
+04-Jan-20	-50	👪	-	evolution
+04-Jan-20	-50	👪	-	evolution
+04-Jan-20	-50	👪	-	evolution
+04-Jan-20	-50	👪	-	evolution
+05-Jan-20	20	👤	Domination	evolution
+05-Jan-20	-50	👪	Infiltration	evolution
+05-Jan-20	-50	👪	Onslaught	evolution
+05-Jan-20	-50	👤	Infiltration	evolution
+05-Jan-20	-50	👤	Domination	evolution
+05-Jan-20	-50	👤	Infiltration	evolution
+06-Jan-20	-44	👤	Domination	evolution
+06-Jan-20	52	👤	Misdirection	evolution

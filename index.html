@@ -50,8 +50,6 @@ const formatTime = d3.timeFormat("%b %d")
 
 const data = d3.tsv("data.tsv", function(d) {
   d.date = parseTime(d.date);
-  console.log(d.date)
-  console.log(formatTime(d.date))
   d.score = +d.score;
   return d;
 }).then(data => {

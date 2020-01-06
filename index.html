@@ -43,7 +43,7 @@
 
 const width = 800
 const height = 600
-const margin = ({top: 20, right: 0, bottom: 50, left: 50})
+const margin = ({top: 20, right: 0, bottom: 80, left: 50})
 
 const parseTime = d3.timeParse("%d-%b-%y")
 const formatTime = d3.timeFormat("%b %d")
@@ -63,12 +63,12 @@ const data = d3.tsv("data.tsv", function(d) {
     .padding(0.1)
     
   const y = d3.scaleLinear()
-    .domain([-100, 100])
+    .domain([-50, 100])
     .range([height - margin.bottom, margin.top])
 
   const xAxis = g => g
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(x).tickFormat(i => `${formatTime(data[i].date)} ${data[i].group}`).ticks(data.length))
+    .attr("transform", `translate(0,${height - margin.bottom + 30})`)
+    .call(d3.axisBottom(x).tickFormat(i => formatTime(data[i].date)).ticks(data.length))
 
   const yAxis = g => g
       .attr("transform", `translate(${margin.left},0)`)
@@ -81,7 +81,6 @@ const data = d3.tsv("data.tsv", function(d) {
           .text(data.y))
 
   svg.append("g")
-      .attr("fill", "steelblue")
     .selectAll("rect")
     .data(data)
     .join("rect")
@@ -95,13 +94,23 @@ const data = d3.tsv("data.tsv", function(d) {
       .call(xAxis);
 
   svg.append("g")
+    .attr("transform", `translate(0,${height - margin.bottom + 20})`)
+    .selectAll("g")
+    .data(data)
+    .join("text")
+      .attr("x", (d, i) => x(i) + x.bandwidth() / 2)
+      .attr("fill", d => d.group === '👤' ? '#ef14ef' : 'white')
+      .style("text-anchor", "middle")
+      .text(d => d.group)
+
+  svg.append("g")
       .call(yAxis);
 
 svg.append("text")
       .attr("y", 10)
       .attr("x", 80)
       .attr("dy", "1em")
-      .attr("font-size", "20px")
+      .attr("font-size", "35px")
       .style("text-anchor", "left")
       .text("XCOM: Evolution Score Card");  
 

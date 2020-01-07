@@ -1,7 +1,7 @@
 
 const width = 800
 const height = 600
-const margin = ({top: 20, right: 0, bottom: 120, left: 50})
+const margin = ({top: 20, right: 0, bottom: 145, left: 50})
 
 const parseTime = d3.timeParse("%d-%b-%y")
 const formatTime = d3.timeFormat("%b %d")
@@ -125,7 +125,12 @@ const data = d3.tsv("data.tsv", function(d, i) {
       .text(d => d.group)
 
   svg.append("g")
-      .call(xAxis);
+    	.call(xAxis)
+    	.selectAll("text")
+    	.attr("transform", "rotate(90)")
+    	.style("text-anchor", "start")
+    	.attr("y", -4)
+    	.attr("x", 10);
 
   svg.append("g")
       .call(yAxis);

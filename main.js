@@ -39,36 +39,57 @@ const data = d3.tsv("data.tsv", function(d, i) {
           .attr("font-weight", "bold")
           .text(data.y))
 
-  const config = {
-    fixed: {
-    	stroke: d => d.score === 'WIN' ? '#00ff00' : 'red',
-    	['stroke-dasharray']: () => 4,
-    	height: () => y(0) - y(20),
-    	fill: () => '#00000000',
-    	y: d => d.score === 'WIN' ? y(20) : y(0)
-    },
-    dynamic: {
-    	stroke: () => null,
-      	['stroke-dasharray']: () => null,
-      	height: d => y(0) - y(Math.abs(d.score)),
-      	fill: d => d.score > 0 ? '#00ff00' : 'red',
-      	y: d => d.score > 0 ? y(d.score) : y(0)
-    }
-  }
-
-  const getConfig = key => d => typeof d.score === 'number' ? config.dynamic[key](d) : config.fixed[key](d)
-
+  // WIN with score +123
   svg.append("g")
     .selectAll("rect")
     .data(data)
     .join("rect")
-      .attr("x", (d, i) => x(i))
-      .attr("y", getConfig("y"))
-      .attr("fill", getConfig("fill"))
-      .attr("stroke", getConfig("stroke"))
-      .attr("stroke-dasharray", getConfig("stroke-dasharray"))
-      .attr("height", getConfig("height"))
-      .attr("width", x.bandwidth())
+    	.filter(d => typeof d.score === 'number' && d.score > 0)
+    	.attr("x", d => x(d.i))
+    	.attr("y", d => y(d.score))
+    	.attr("fill", '#00ff00')
+    	.attr("height", d => y(0) - y(Math.abs(d.score)))
+    	.attr("width", x.bandwidth())
+
+  // WIN without score
+  svg.append("g")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+    	.filter(d => d.score === "WIN")
+    	.attr("x", d => x(d.i))
+    	.attr("y", d => y(20))
+    	.attr("fill", '#00000000')
+    	.attr("stroke", '#00ff00')
+    	.attr("stroke-dasharray", 4)
+    	.attr("height", y(0) - y(20))
+    	.attr("width", x.bandwidth())
+
+  // LOSS with score +123
+  svg.append("g")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+    	.filter(d => typeof d.score === 'number' && d.score < 0)
+    	.attr("x", d => x(d.i))
+    	.attr("y", y(0))
+    	.attr("fill", 'red')
+    	.attr("height", d => y(0) - y(Math.abs(d.score)))
+    	.attr("width", x.bandwidth())
+
+  // LOSS without score DNF
+  svg.append("g")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+    	.filter(d => d.score === "LOSS")
+    	.attr("x", d => x(d.i))
+    	.attr("y", d => y(0))
+    	.attr("fill", '#00000000')
+    	.attr("stroke", 'red')
+    	.attr("stroke-dasharray", 4)
+    	.attr("height", y(0) - y(20))
+    	.attr("width", x.bandwidth())
 
   svg.append("g")
     .selectAll("text")

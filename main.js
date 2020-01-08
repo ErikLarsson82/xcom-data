@@ -1,7 +1,7 @@
 
 const width = 800
 const height = 600
-const margin = ({top: 20, right: 0, bottom: 145, left: 50})
+const margin = ({top: 20, right: 20, bottom: 145, left: 50})
 
 const parseTime = d3.timeParse("%d-%b-%y")
 const formatTime = d3.timeFormat("%b %d")
@@ -13,6 +13,36 @@ const data = d3.tsv("data.tsv", function(d, i) {
   return d;
 }).then(data => {
 
+  const missions = [
+    "Onslaugt",
+    "Occupation",
+    "Infiltration",
+    "Misdirection",
+    "Domination",
+    "Supression",
+    "Annihilation"
+  ].map(mission => {
+
+    const sum = (acc, curr) => acc + curr
+    const isVanilla = d => d.game === "vanilla"
+    const isEvolution = d => !isVanilla(d)
+    const currentMission = d => d.mission === mission
+
+    const currentMissionEvolutionOnly = data.filter(isEvolution).filter(currentMission)
+
+    const scores = currentMissionEvolutionOnly.filter(d => !isNaN(+d.score)).map(d => d.score)
+
+    const played = currentMissionEvolutionOnly
+    
+    const wins = currentMissionEvolutionOnly.filter(d => (!isNaN(+d.score) && d.score > 0) || d.score === "WIN")
+      
+    const losses = currentMissionEvolutionOnly.filter(d => (!isNaN(+d.score) && d.score < 0) || d.score === "LOSS")
+    
+    document.getElementById(`${mission.toLowerCase()}-average`).innerHTML = scores.length === 0 ? "-" : scores.reduce(sum, 0) / scores.length
+    document.getElementById(`${mission.toLowerCase()}-ratio`).innerHTML = played.length === 0 ? "-" : `${Math.round((wins.length / played.length) * 100)} %`
+    document.getElementById(`${mission.toLowerCase()}-amount`).innerHTML = played.length === 0 ? "-" : played.length
+  })
+  
   const svg = d3.create("svg")
       .attr("viewBox", [0, 0, width, height]);
 
@@ -158,5 +188,5 @@ svg.append("text")
       .style("text-anchor", "middle")
       .text("Date");  
 
-  d3.select('#container').append(() => svg.node())
+  d3.select('#graph-container').append(() => svg.node())
 })

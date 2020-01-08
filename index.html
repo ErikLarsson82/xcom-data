@@ -14,8 +14,8 @@
     fill: #00ff00;
   }
   svg {
-    width: 80%;
-    max-height: 80%;
+    /*width: 80%; */
+    /* max-height: 80%; */
     border: 2px dashed #00ff00;
     background: #07070af0;
   }
@@ -24,12 +24,85 @@
     stroke: #00ff00;
     stroke-width: 2px;
   }
-  #container {
+  .layout {
     width: 100%;
-    height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  #content {
+    flex-basis: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: end;
+  }
+  #graph-container {
+    flex-basis: 57%;
+    margin: 10px;
+  }
+  #stats-container {
+    flex-basis: 40%;
+    border: 2px dashed #00ff00;
+    background: #07070af0;
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .key {
+    font-size: 20px;
+    white-space: nowrap;
+    padding-right: 20px;
+  }
+
+  .bold {
+    font-style: italic;
+    color: grey;
+  }
+
+  .value {
+    font-size: 18px;
+    padding: 3px;
+    padding-right: 20px;
+  }
+
+  @media only screen and (max-width: 1500px) {
+    #content {
+      flex-direction: column;
+      flex-basis: initial;
+      width: 100%;
+      align-items: center;
+    }
+    #graph-container {
+      flex-basis: initial;
+      margin: 0;
+      width: 80%;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    #stats-container {
+      flex-basis: initial;
+      margin: 0;
+      margin-bottom: 90px;
+    }
+  }
+
+  @media only screen and (max-width: 700px) {
+    .value {
+      font-size: 12px;
+    }
+    .key {
+      font-size: 13px;
+      padding: 4px;
+    }
+    
   }
 
   </style>
@@ -37,7 +110,48 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
-  <div id="container"></div>
+  <div class="layout">
+    <div id="content">
+      <div id="graph-container"></div>
+      <div id="stats-container">
+        <img src="exalt-logo.png" width="60px" height="60%">
+        <div class="grid">
+          <div class="key bold">Mission</div>
+          <div class="key bold">Played</div>
+          <div class="key bold">Win/Loss ratio</div>
+          <div class="key bold">Average score</div>
+          <div class="value">Domination</div>
+          <div id="domination-amount" class="value">-</div>
+          <div id="domination-ratio" class="value">-</div>
+          <div id="domination-average" class="value">-</div>
+          <div class="value">Onslaugt</div>
+          <div id="onslaugt-amount" class="value">-</div>
+          <div id="onslaugt-ratio" class="value">-</div>
+          <div id="onslaugt-average" class="value">-</div>
+          <div class="value">Occupation</div>
+          <div id="occupation-amount" class="value">-</div>
+          <div id="occupation-ratio" class="value">-</div>
+          <div id="occupation-average" class="value">-</div>
+          <div class="value">Infiltration</div>
+          <div id="infiltration-amount" class="value">-</div>
+          <div id="infiltration-ratio" class="value">-</div>
+          <div id="infiltration-average" class="value">-</div>
+          <div class="value">Misdirection</div>
+          <div id="misdirection-amount" class="value">-</div>
+          <div id="misdirection-ratio" class="value">-</div>
+          <div id="misdirection-average" class="value">-</div>
+          <div class="value">Supression</div>
+          <div id="supression-amount" class="value">-</div>
+          <div id="supression-ratio" class="value">-</div>
+          <div id="supression-average" class="value">-</div>
+          <div class="value">Annihilation</div>
+          <div id="annihilation-amount" class="value">-</div>
+          <div id="annihilation-ratio" class="value">-</div>
+          <div id="annihilation-average" class="value">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>

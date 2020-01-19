@@ -1,17 +1,67 @@
 
-const width = 800
-const height = 600
-const margin = ({top: 20, right: 20, bottom: 145, left: 50})
+//const margin = ({top: 20, right: 20, bottom: 145, left: 50})
+const margin = ({top: 100, right: 100, bottom: 100, left: 100})
+const width = 800 - margin.left - margin.right
+const height = 600 - margin.top - margin.bottom
 
 const parseTime = d3.timeParse("%d-%b-%y")
 const formatTime = d3.timeFormat("%b %d")
 
-const data = d3.tsv("data.tsv", function(d, i) {
+let showVanilla = true,
+  showEvolution = true,
+  showCargo = true,
+  showTog = true
+
+const svg = initGraph()
+
+function parseData(d, i) {
   d.date = parseTime(d.date);
   d.score = isNaN(+d.score) ? d.score : +d.score;
   d.i = i
   return d;
-}).then(data => {
+}
+
+function initGraph() {
+
+  const svg = d3.create("svg")
+      .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+
+  d3.select('#graph-container').append(() => svg.node())
+
+  svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(${margin.left},${height})`)
+
+  svg.append("g")
+    .attr("class", "y-axis")
+    .attr("transform", `translate(${margin.left},${margin.top})`)
+      
+  const content = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`)
+    
+  content.append("g")
+    .attr("class", "win-score")
+    
+  render()
+
+  return svg
+}
+
+function render() {
+  d3.tsv("data.tsv", parseData).then(renderGraph)
+}
+
+const isVanilla = d => d.game === "vanilla"
+const isEvolution = d => !isVanilla(d)    
+
+function renderGraph(_data) {
+
+  const data = _data.filter(x => {
+    if (!showVanilla && isVanilla(x)) {
+      return false
+    }
+    return true
+  })
 
   const missions = [
     "Onslaugt",
@@ -24,8 +74,6 @@ const data = d3.tsv("data.tsv", function(d, i) {
   ].map(mission => {
 
     const sum = (acc, curr) => acc + curr
-    const isVanilla = d => d.game === "vanilla"
-    const isEvolution = d => !isVanilla(d)
     const currentMission = d => d.mission === mission
 
     const currentMissionEvolutionOnly = data.filter(isEvolution).filter(currentMission)
@@ -42,84 +90,81 @@ const data = d3.tsv("data.tsv", function(d, i) {
     document.getElementById(`${mission.toLowerCase()}-ratio`).innerHTML = played.length === 0 ? "-" : `${Math.round((wins.length / played.length) * 100)} %`
     document.getElementById(`${mission.toLowerCase()}-amount`).innerHTML = played.length === 0 ? "-" : played.length
   })
-  
-  const svg = d3.create("svg")
-      .attr("viewBox", [0, 0, width, height]);
 
   const x = d3.scaleBand()
     .domain(d3.range(data.length))
-    .range([margin.left, width - margin.right])
-    .padding(0.1)
+    .range([0, width])
+    .padding(0.2)
+    .paddingOuter(0)
+
+  console.log(x.bandwidth(), x(0), x(1), d3.range(data.length))
     
   const y = d3.scaleLinear()
     .domain([-50, 100])
     .range([height - margin.bottom, margin.top])
 
-  const xAxis = g => g
-    .attr("transform", `translate(0,${height - margin.bottom + 70})`)
-    .call(d3.axisBottom(x).tickFormat(i => formatTime(data[i].date)).ticks(data.length))
+  svg.select(".x-axis")
+      .call(d3.axisBottom(x).tickFormat(i => formatTime(data[i].date)).ticks(data.length))
+      .selectAll("text")
+      .attr("transform", "rotate(90)")
+      .style("text-anchor", "start")
+      .attr("y", -4)
+      .attr("x", 10);
 
-  const yAxis = g => g
-      .attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(y))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.select(".tick:last-of-type text").clone()
-          .attr("x", 3)
-          .attr("text-anchor", "start")
-          .attr("font-weight", "bold")
-          .text(data.y))
+  svg.select(".y-axis")
+    .call(d3.axisLeft(y))
 
   // WIN with score +123
-  svg.append("g")
+  svg.select(".win-score")
     .selectAll("rect")
     .data(data)
     .join("rect")
-    	.filter(d => typeof d.score === 'number' && d.score > 0)
-    	.attr("x", d => x(d.i))
-    	.attr("y", d => y(d.score))
-    	.attr("fill", '#00ff00')
-    	.attr("height", d => y(0) - y(Math.abs(d.score)))
-    	.attr("width", x.bandwidth())
-
+      .filter(d => typeof d.score === 'number' && d.score > 0)
+      .attr("x", d => x(d.i))
+      .attr("y", d => y(d.score))
+      .attr("fill", '#00ff00')
+      .attr("height", d => y(0) - y(Math.abs(d.score)))
+      .attr("width", x.bandwidth())
+/*
   // WIN without score
   svg.append("g")
     .selectAll("rect")
     .data(data)
     .join("rect")
-    	.filter(d => d.score === "WIN")
-    	.attr("x", d => x(d.i))
-    	.attr("y", d => y(20))
-    	.attr("fill", '#00000000')
-    	.attr("stroke", '#00ff00')
-    	.attr("stroke-dasharray", 4)
-    	.attr("height", y(0) - y(20))
-    	.attr("width", x.bandwidth())
+      .filter(d => d.score === "WIN")
+      .attr("x", d => x(d.i))
+      .attr("y", d => y(20))
+      .attr("fill", '#00000000')
+      .attr("stroke", '#00ff00')
+      .attr("stroke-dasharray", 4)
+      .attr("height", y(0) - y(20))
+      .attr("width", x.bandwidth())
 
   // LOSS with score +123
   svg.append("g")
     .selectAll("rect")
     .data(data)
     .join("rect")
-    	.filter(d => typeof d.score === 'number' && d.score < 0)
-    	.attr("x", d => x(d.i))
-    	.attr("y", y(0))
-    	.attr("fill", 'red')
-    	.attr("height", d => y(0) - y(Math.abs(d.score)))
-    	.attr("width", x.bandwidth())
+      .filter(d => typeof d.score === 'number' && d.score < 0)
+      .attr("x", d => x(d.i))
+      .attr("y", y(0))
+      .attr("fill", 'red')
+      .attr("height", d => y(0) - y(Math.abs(d.score)))
+      .attr("width", x.bandwidth())
 
   // LOSS without score DNF
   svg.append("g")
     .selectAll("rect")
     .data(data)
     .join("rect")
-    	.filter(d => d.score === "LOSS")
-    	.attr("x", d => x(d.i))
-    	.attr("y", d => y(0))
-    	.attr("fill", '#00000000')
-    	.attr("stroke", 'red')
-    	.attr("stroke-dasharray", 4)
-    	.attr("height", y(0) - y(20))
-    	.attr("width", x.bandwidth())
+      .filter(d => d.score === "LOSS")
+      .attr("x", d => x(d.i))
+      .attr("y", d => y(0))
+      .attr("fill", '#00000000')
+      .attr("stroke", 'red')
+      .attr("stroke-dasharray", 4)
+      .attr("height", y(0) - y(20))
+      .attr("width", x.bandwidth())
 
   svg.append("g")
     .selectAll("text")
@@ -128,8 +173,8 @@ const data = d3.tsv("data.tsv", function(d, i) {
     .append("text")
     .filter(d => d.score === "LOSS")
     .text("DNF")
-  	.style("text-anchor", "middle")
-  	.attr("font-size", "8px")
+    .style("text-anchor", "middle")
+    .attr("font-size", "8px")
     .attr("y", y(-12))
     .attr("x", d => x(d.i) + 13)
     .attr("fill", "red")
@@ -153,19 +198,11 @@ const data = d3.tsv("data.tsv", function(d, i) {
       .attr("fill", d => d.group === '👤' ? '#ef14ef' : 'white')
       .style("text-anchor", "middle")
       .text(d => d.group)
-
-  svg.append("g")
-    	.call(xAxis)
-    	.selectAll("text")
-    	.attr("transform", "rotate(90)")
-    	.style("text-anchor", "start")
-    	.attr("y", -4)
-    	.attr("x", 10);
-
-  svg.append("g")
-      .call(yAxis);
-
-svg.append("text")
+*/
+  
+/*
+  
+  svg.append("text")
       .attr("y", 10)
       .attr("x", 80)
       .attr("dy", "1em")
@@ -173,7 +210,7 @@ svg.append("text")
       .style("text-anchor", "left")
       .text("XCOM Score Card");  
 
-svg.append("text")
+  svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 5)
       .attr("x", 0 - (height / 2))
@@ -181,12 +218,10 @@ svg.append("text")
       .style("text-anchor", "middle")
       .text("Score");  
 
-svg.append("text")
+  svg.append("text")
       .attr("y", 570)
       .attr("x", (width / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Date");  
-
-  d3.select('#graph-container').append(() => svg.node())
-})
+      .text("Date");  */
+}

@@ -1,27 +1,32 @@
-date	score	group	mission	game
-01-Jan-20	WIN	👪	Domination	vanilla
-02-Jan-20	WIN	👪	Infiltration	vanilla
-02-Jan-20	WIN	👪	Misdirection	vanilla
-03-Jan-20	WIN	👪	Onslaught	vanilla
-03-Jan-20	WIN	👪	Occupation	vanilla
-01-Jan-20	WIN	👤	Domination	vanilla
-02-Jan-20	WIN	👤	Infiltration	vanilla
-02-Jan-20	WIN	👤	Misdirection	vanilla
-03-Jan-20	WIN	👤	Onslaught	vanilla
-03-Jan-20	WIN	👤	Occupation	vanilla
-04-Jan-20	LOSS	👪	-	evolution
-04-Jan-20	LOSS	👪	-	evolution
-04-Jan-20	LOSS	👪	-	evolution
-04-Jan-20	LOSS	👪	-	evolution
-04-Jan-20	LOSS	👪	-	evolution
-04-Jan-20	LOSS	👪	-	evolution
-04-Jan-20	LOSS	👪	-	evolution
-05-Jan-20	WIN	👤	Domination	evolution
-05-Jan-20	LOSS	👪	Infiltration	evolution
-05-Jan-20	LOSS	👪	Onslaught	evolution
-05-Jan-20	LOSS	👤	Infiltration	evolution
-05-Jan-20	LOSS	👤	Domination	evolution
-05-Jan-20	LOSS	👤	Infiltration	evolution
-06-Jan-20	-44	👤	Domination	evolution
-06-Jan-20	52	👤	Misdirection	evolution
-07-Jan-20	LOSS	👤	Onslaugt	evolution
+date	score	group	mission	game	difficulty	mechtoids	
+01-Jan-20	WIN	👪	Domination	vanilla	expert
+02-Jan-20	WIN	👪	Infiltration	vanilla	expert
+02-Jan-20	WIN	👪	Misdirection	vanilla	expert
+03-Jan-20	WIN	👪	Onslaught	vanilla	expert
+03-Jan-20	WIN	👪	Occupation	vanilla	expert
+01-Jan-20	WIN	👤	Domination	vanilla	expert
+02-Jan-20	WIN	👤	Infiltration	vanilla	expert
+02-Jan-20	WIN	👤	Misdirection	vanilla	expert
+03-Jan-20	WIN	👤	Onslaught	vanilla	expert
+03-Jan-20	WIN	👤	Occupation	vanilla	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+04-Jan-20	LOSS	👪	-	evolution	expert
+05-Jan-20	WIN	👤	Domination	evolution	expert
+05-Jan-20	LOSS	👪	Infiltration	evolution	expert
+05-Jan-20	LOSS	👪	Onslaught	evolution	expert
+05-Jan-20	LOSS	👤	Infiltration	evolution	expert
+05-Jan-20	LOSS	👤	Domination	evolution	expert
+05-Jan-20	LOSS	👤	Infiltration	evolution	expert
+06-Jan-20	-44	👤	Domination	evolution	expert
+06-Jan-20	52	👤	Misdirection	evolution	expert
+07-Jan-20	LOSS	👤	Onslaugt	evolution	expert
+10-Jan-20	LOSS	👤	Misdirection	evolution	expert
+15-Jan-20	LOSS	👤	Infiltration	evolution	expert	
+19-Jan-20	54	👪	Misdirection	evolution	expert	false
+19-Jan-20	-60	👪	Domination	evolution	expert	false
+19-Jan-20	53	👪	Domination	evolution	hard	false

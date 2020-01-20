@@ -1,6 +1,5 @@
 
-//const margin = ({top: 20, right: 20, bottom: 145, left: 50})
-const margin = ({top: 100, right: 100, bottom: 100, left: 100})
+const margin = ({top: 20, right: 20, bottom: 200, left: 50})
 const width = 800 - margin.left - margin.right
 const height = 600 - margin.top - margin.bottom
 
@@ -30,17 +29,15 @@ function initGraph() {
 
   svg.append("g")
     .attr("class", "x-axis")
-    .attr("transform", `translate(${margin.left},${height})`)
+    .attr("transform", `translate(${margin.left},${height + 130})`)
 
   svg.append("g")
     .attr("class", "y-axis")
     .attr("transform", `translate(${margin.left},${margin.top})`)
       
   const content = svg.append("g")
+    .attr("class", "conent")
     .attr("transform", `translate(${margin.left},${margin.top})`)
-    
-  content.append("g")
-    .attr("class", "win-score")
     
   render()
 
@@ -97,11 +94,11 @@ function renderGraph(_data) {
     .padding(0.2)
     .paddingOuter(0)
 
-  console.log(x.bandwidth(), x(0), x(1), d3.range(data.length))
-    
+  const scores = data.filter(x=>!isNaN(x.score)).map(x=>x.score)
+
   const y = d3.scaleLinear()
-    .domain([-50, 100])
-    .range([height - margin.bottom, margin.top])
+    .domain([d3.min(scores), 100])
+    .range([height + 30, margin.top])
 
   svg.select(".x-axis")
       .call(d3.axisBottom(x).tickFormat(i => formatTime(data[i].date)).ticks(data.length))
@@ -114,24 +111,21 @@ function renderGraph(_data) {
   svg.select(".y-axis")
     .call(d3.axisLeft(y))
 
-  // WIN with score +123
-  svg.select(".win-score")
+  const selection = svg.select(".conent")
     .selectAll("rect")
-    .data(data)
+    .data(data, x=>`${x.i}`)
     .join("rect")
-      .filter(d => typeof d.score === 'number' && d.score > 0)
+
+  // WIN with score +123
+  selection.filter(d => typeof d.score === 'number' && d.score > 0)
       .attr("x", d => x(d.i))
       .attr("y", d => y(d.score))
       .attr("fill", '#00ff00')
       .attr("height", d => y(0) - y(Math.abs(d.score)))
       .attr("width", x.bandwidth())
-/*
+
   // WIN without score
-  svg.append("g")
-    .selectAll("rect")
-    .data(data)
-    .join("rect")
-      .filter(d => d.score === "WIN")
+  selection.filter(d => d.score === "WIN")
       .attr("x", d => x(d.i))
       .attr("y", d => y(20))
       .attr("fill", '#00000000')
@@ -141,11 +135,7 @@ function renderGraph(_data) {
       .attr("width", x.bandwidth())
 
   // LOSS with score +123
-  svg.append("g")
-    .selectAll("rect")
-    .data(data)
-    .join("rect")
-      .filter(d => typeof d.score === 'number' && d.score < 0)
+  selection.filter(d => typeof d.score === 'number' && d.score < 0)
       .attr("x", d => x(d.i))
       .attr("y", y(0))
       .attr("fill", 'red')
@@ -153,11 +143,7 @@ function renderGraph(_data) {
       .attr("width", x.bandwidth())
 
   // LOSS without score DNF
-  svg.append("g")
-    .selectAll("rect")
-    .data(data)
-    .join("rect")
-      .filter(d => d.score === "LOSS")
+  selection.filter(d => d.score === "LOSS")
       .attr("x", d => x(d.i))
       .attr("y", d => y(0))
       .attr("fill", '#00000000')
@@ -166,41 +152,38 @@ function renderGraph(_data) {
       .attr("height", y(0) - y(20))
       .attr("width", x.bandwidth())
 
-  svg.append("g")
+  svg.select(".conent")
     .selectAll("text")
-    .data(data)
-    .enter()
-    .append("text")
-    .filter(d => d.score === "LOSS")
-    .text("DNF")
-    .style("text-anchor", "middle")
-    .attr("font-size", "8px")
-    .attr("y", y(-12))
-    .attr("x", d => x(d.i) + 13)
-    .attr("fill", "red")
-
-  svg.append("g")
-    .attr("transform", `translate(0,${height - margin.bottom + 20})`)
-    .selectAll("g")
-    .data(data)
+    .data(data, x=>`${x.i}`)
+      .join("text")
+      .filter(d => d.score === "LOSS")
+      .text("DNF")
+      .style("text-anchor", "middle")
+      .attr("font-size", "5px")
+      .attr("y", y(-12))
+      .attr("x", d => x(d.i) + 7)
+      .attr("fill", "red")
+    
+  svg.select(".conent")
+    .selectAll("image")
+    .data(data, x=>`${x.i}`)
     .join("image")
-      .attr("x", (d, i) => x(i) + 4)
+      .attr("x", (d, i) => x(i))
+      .attr("y", (d, i) => y(d3.min(scores) - 20))
       .attr("href", d => d.game === 'vanilla' ? 'xcom.png' : 'exalt-logo.png')
       .attr("width", "20")
       .attr("height", "20")
 
-  svg.append("g")
-    .attr("transform", `translate(0,${height - margin.bottom + 60})`)
-    .selectAll("g")
-    .data(data)
+  svg.select(".conent")
+    .selectAll(".player-icons")
+    .data(data, x=>`${x.i}`)
     .join("text")
-      .attr("x", (d, i) => x(i) + x.bandwidth() / 2)
+      .attr("class", "player-icons")
+      .attr("x", (d, i) => x(i) + (x.bandwidth() / 2) + 2)
+      .attr("y", (d, i) => y(d3.min(scores) - 15))
       .attr("fill", d => d.group === '👤' ? '#ef14ef' : 'white')
       .style("text-anchor", "middle")
       .text(d => d.group)
-*/
-  
-/*
   
   svg.append("text")
       .attr("y", 10)
@@ -223,5 +206,5 @@ function renderGraph(_data) {
       .attr("x", (width / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Date");  */
+      .text("Date");
 }

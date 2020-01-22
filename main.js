@@ -36,54 +36,99 @@ function initGraph() {
     .attr("transform", `translate(${margin.left},${margin.top})`)
       
   const content = svg.append("g")
-    .attr("class", "conent")
+    .attr("class", "content")
     .attr("transform", `translate(${margin.left},${margin.top})`)
-    
+
+  svg.append("text")
+      .attr("y", 10)
+      .attr("x", 80)
+      .attr("dy", "1em")
+      .attr("font-size", "35px")
+      .style("text-anchor", "left")
+      .text("XCOM Score Card");  
+
+  svg.append("text")
+      .attr("class", "filter-label")
+      .attr("y", 50)
+      .attr("x", 78)
+      .attr("dy", "1em")
+      .attr("font-size", "20px")
+      .style("text-anchor", "right")
+      .text("Filter: Vanilla, Evolution, Cargo, Tog");  
+
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 5)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Score");  
+
+  svg.append("text")
+      .attr("y", 570)
+      .attr("x", (width / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Date");
+
   render()
 
   return svg
 }
 
 function render() {
-  d3.tsv("data.tsv", parseData).then(renderGraph)
+  d3.tsv("data.tsv").then(x => x.filter(hiddenData)).then(renderGraph)
 }
 
 const isVanilla = d => d.game === "vanilla"
 const isEvolution = d => !isVanilla(d)    
 
+const hiddenData = x => {
+  if (!showVanilla && isVanilla(x)) {
+    return false
+  }
+  if (!showEvolution && !isVanilla(x)) {
+    return false
+  }
+  if (!showCargo && x.group === '👤') {
+    return false
+  }
+  if (!showTog && x.group === '👪') {
+    return false
+  }
+  return true
+}
+
 function renderGraph(_data) {
 
-  const data = _data.filter(x => {
-    if (!showVanilla && isVanilla(x)) {
-      return false
-    }
-    return true
-  })
+  const data = _data.map(parseData)
 
   const missions = [
-    "Onslaugt",
+    "Onslaught",
     "Occupation",
     "Infiltration",
     "Misdirection",
     "Domination",
     "Supression",
-    "Annihilation"
+    "Annihilation",
+    "All"
   ].map(mission => {
 
     const sum = (acc, curr) => acc + curr
     const currentMission = d => d.mission === mission
 
-    const currentMissionEvolutionOnly = data.filter(isEvolution).filter(currentMission)
+    const visibleData = data.filter(hiddenData)
+    const missionData = mission === "All" ? visibleData : visibleData.filter(currentMission)
 
-    const scores = currentMissionEvolutionOnly.filter(d => !isNaN(+d.score)).map(d => d.score)
+    const scores = missionData.filter(d => !isNaN(+d.score)).map(d => d.score)
 
-    const played = currentMissionEvolutionOnly
+    const played = missionData
     
-    const wins = currentMissionEvolutionOnly.filter(d => (!isNaN(+d.score) && d.score > 0) || d.score === "WIN")
+    const wins = missionData.filter(d => (!isNaN(+d.score) && d.score > 0) || d.score === "WIN")
       
-    const losses = currentMissionEvolutionOnly.filter(d => (!isNaN(+d.score) && d.score < 0) || d.score === "LOSS")
+    const losses = missionData.filter(d => (!isNaN(+d.score) && d.score < 0) || d.score === "LOSS")
     
-    document.getElementById(`${mission.toLowerCase()}-average`).innerHTML = scores.length === 0 ? "-" : scores.reduce(sum, 0) / scores.length
+    document.getElementById(`${mission.toLowerCase()}-average`).innerHTML = scores.length === 0 ? "-" : (scores.reduce(sum, 0) / scores.length).toFixed(2)
     document.getElementById(`${mission.toLowerCase()}-ratio`).innerHTML = played.length === 0 ? "-" : `${Math.round((wins.length / played.length) * 100)} %`
     document.getElementById(`${mission.toLowerCase()}-amount`).innerHTML = played.length === 0 ? "-" : played.length
   })
@@ -92,12 +137,14 @@ function renderGraph(_data) {
     .domain(d3.range(data.length))
     .range([0, width])
     .padding(0.2)
-    .paddingOuter(0)
+    .paddingOuter(0.2)
+    .align(1)
 
   const scores = data.filter(x=>!isNaN(x.score)).map(x=>x.score)
+  const min = scores.length > 0 ? d3.min(scores) : -100
 
   const y = d3.scaleLinear()
-    .domain([d3.min(scores), 100])
+    .domain([min, 100])
     .range([height + 30, margin.top])
 
   svg.select(".x-axis")
@@ -111,7 +158,7 @@ function renderGraph(_data) {
   svg.select(".y-axis")
     .call(d3.axisLeft(y))
 
-  const selection = svg.select(".conent")
+  const selection = svg.select(".content")
     .selectAll("rect")
     .data(data, x=>`${x.i}`)
     .join("rect")
@@ -121,6 +168,8 @@ function renderGraph(_data) {
       .attr("x", d => x(d.i))
       .attr("y", d => y(d.score))
       .attr("fill", '#00ff00')
+      .attr("stroke", "inherit")
+      .attr("stroke-dasharray", 0)
       .attr("height", d => y(0) - y(Math.abs(d.score)))
       .attr("width", x.bandwidth())
 
@@ -140,6 +189,8 @@ function renderGraph(_data) {
       .attr("y", y(0))
       .attr("fill", 'red')
       .attr("height", d => y(0) - y(Math.abs(d.score)))
+      .attr("stroke", "inherit")
+      .attr("stroke-dasharray", 0)
       .attr("width", x.bandwidth())
 
   // LOSS without score DNF
@@ -152,7 +203,8 @@ function renderGraph(_data) {
       .attr("height", y(0) - y(20))
       .attr("width", x.bandwidth())
 
-  svg.select(".conent")
+/*
+  svg.select(".content")
     .selectAll("text")
     .data(data, x=>`${x.i}`)
       .join("text")
@@ -163,48 +215,36 @@ function renderGraph(_data) {
       .attr("y", y(-12))
       .attr("x", d => x(d.i) + 7)
       .attr("fill", "red")
-    
-  svg.select(".conent")
+  */ 
+
+  const filters = [
+    { label: "Vanilla", value: showVanilla },
+    { label: "Evolution", value: showEvolution },
+    { label: "Cargo", value: showCargo },
+    { label: "Tog", value: showTog }
+  ]
+
+  svg.select(".filter-label")
+    .html(`Filter: ${ filters.filter(x=>x.value).map(x=>x.label).join(", ") }`)
+
+  svg.select(".content")
     .selectAll("image")
     .data(data, x=>`${x.i}`)
     .join("image")
-      .attr("x", (d, i) => x(i))
-      .attr("y", (d, i) => y(d3.min(scores) - 20))
+      .attr("x", (d, i) => x(i) + (x.bandwidth() / 2) - 8)
+      .attr("y", (d, i) => y(min - 20))
       .attr("href", d => d.game === 'vanilla' ? 'xcom.png' : 'exalt-logo.png')
       .attr("width", "20")
       .attr("height", "20")
 
-  svg.select(".conent")
+  svg.select(".content")
     .selectAll(".player-icons")
     .data(data, x=>`${x.i}`)
     .join("text")
       .attr("class", "player-icons")
       .attr("x", (d, i) => x(i) + (x.bandwidth() / 2) + 2)
-      .attr("y", (d, i) => y(d3.min(scores) - 15))
+      .attr("y", (d, i) => y(min - 15))
       .attr("fill", d => d.group === '👤' ? '#ef14ef' : 'white')
       .style("text-anchor", "middle")
       .text(d => d.group)
-  
-  svg.append("text")
-      .attr("y", 10)
-      .attr("x", 80)
-      .attr("dy", "1em")
-      .attr("font-size", "35px")
-      .style("text-anchor", "left")
-      .text("XCOM Score Card");  
-
-  svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 5)
-      .attr("x", 0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Score");  
-
-  svg.append("text")
-      .attr("y", 570)
-      .attr("x", (width / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Date");
 }

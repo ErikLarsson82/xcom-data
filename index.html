@@ -110,8 +110,10 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
-  <input type="button" onClick="render()">hmm</input>
   <input type="button" onClick="showVanilla = !showVanilla; render()" value="Vanilla"></input>
+  <input type="button" onClick="showEvolution = !showEvolution; render()" value="Evolution"></input>
+  <input type="button" onClick="showCargo = !showCargo; render()" value="Cargo"></input>
+  <input type="button" onClick="showTog = !showTog; render()" value="Tog"></input>
   <div class="layout">
     <div id="content">
       <div id="graph-container"></div>
@@ -127,9 +129,9 @@
           <div id="domination-ratio" class="value">-</div>
           <div id="domination-average" class="value">-</div>
           <div class="value">Onslaugt</div>
-          <div id="onslaugt-amount" class="value">-</div>
-          <div id="onslaugt-ratio" class="value">-</div>
-          <div id="onslaugt-average" class="value">-</div>
+          <div id="onslaught-amount" class="value">-</div>
+          <div id="onslaught-ratio" class="value">-</div>
+          <div id="onslaught-average" class="value">-</div>
           <div class="value">Occupation</div>
           <div id="occupation-amount" class="value">-</div>
           <div id="occupation-ratio" class="value">-</div>
@@ -150,6 +152,10 @@
           <div id="annihilation-amount" class="value">-</div>
           <div id="annihilation-ratio" class="value">-</div>
           <div id="annihilation-average" class="value">-</div>
+          <div class="value">All</div>
+          <div id="all-amount" class="value">-</div>
+          <div id="all-ratio" class="value">-</div>
+          <div id="all-average" class="value">-</div>
         </div>
       </div>
     </div>

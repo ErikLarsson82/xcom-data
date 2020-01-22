@@ -20,6 +20,15 @@ function parseData(d, i) {
   return d;
 }
 
+const opacity = name => bool => bool ? name : [name].concat("dim").join(" ")
+
+function setIcons() {
+  document.getElementById("xcom").className = opacity("icon")(showVanilla)
+  document.getElementById("exalt").className = opacity("icon")(showEvolution)
+  document.getElementById("cargo").className = opacity("button")(showCargo)
+  document.getElementById("tog").className = opacity("button")(showTog)
+}
+
 function initGraph() {
 
   const svg = d3.create("svg")
@@ -46,15 +55,6 @@ function initGraph() {
       .attr("font-size", "35px")
       .style("text-anchor", "left")
       .text("XCOM Score Card");  
-
-  svg.append("text")
-      .attr("class", "filter-label")
-      .attr("y", 50)
-      .attr("x", 78)
-      .attr("dy", "1em")
-      .attr("font-size", "20px")
-      .style("text-anchor", "right")
-      .text("Filter: Vanilla, Evolution, Cargo, Tog");  
 
   svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -100,6 +100,8 @@ const hiddenData = x => {
 }
 
 function renderGraph(_data) {
+
+  setIcons()
 
   const data = _data.map(parseData)
 
@@ -216,16 +218,6 @@ function renderGraph(_data) {
       .attr("x", d => x(d.i) + 7)
       .attr("fill", "red")
   */ 
-
-  const filters = [
-    { label: "Vanilla", value: showVanilla },
-    { label: "Evolution", value: showEvolution },
-    { label: "Cargo", value: showCargo },
-    { label: "Tog", value: showTog }
-  ]
-
-  svg.select(".filter-label")
-    .html(`Filter: ${ filters.filter(x=>x.value).map(x=>x.label).join(", ") }`)
 
   svg.select(".content")
     .selectAll("image")

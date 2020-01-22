@@ -39,6 +39,7 @@
     align-items: end;
   }
   #graph-container {
+    position: relative;
     flex-basis: 57%;
     margin: 10px;
   }
@@ -94,6 +95,37 @@
     }
   }
 
+  .icons {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  .icon:hover {
+    cursor: pointer;
+  }
+
+  .dim {
+    opacity: 0.2;
+  }
+
+  .button {
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0,255,0,1);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0,255,0,1);
+    box-shadow: 2px 2px 5px 0px rgba(0,255,0,1);
+    border: 2px solid #00FF00;
+    padding: 4px;
+    margin: 8px;
+  }
+
+  .button:hover {
+    cursor: pointer;
+  }
+
+  .all {
+    margin-top: 20px;
+  }
+
   @media only screen and (max-width: 700px) {
     .value {
       font-size: 12px;
@@ -110,15 +142,17 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
-  <input type="button" onClick="showVanilla = !showVanilla; render()" value="Vanilla"></input>
-  <input type="button" onClick="showEvolution = !showEvolution; render()" value="Evolution"></input>
-  <input type="button" onClick="showCargo = !showCargo; render()" value="Cargo"></input>
-  <input type="button" onClick="showTog = !showTog; render()" value="Tog"></input>
   <div class="layout">
     <div id="content">
-      <div id="graph-container"></div>
+      <div id="graph-container">
+        <div class="icons">
+          <img id="xcom" onClick="showVanilla = !showVanilla; render()" class="icon" height="30" width="30" src="xcom.png">
+          <img id="exalt" onClick="showEvolution = !showEvolution; render()" class="icon" height="30" width="30" src="exalt-logo.png">
+          <div id="cargo" onClick="showCargo = !showCargo; render()" class="button">👤 Cargo</div>
+          <div id="tog" onClick="showTog = !showTog; render()" class="button">👪 Team Ottogräm</div>
+        </div>
+      </div>
       <div id="stats-container">
-        <img src="exalt-logo.png" width="60px" height="60%">
         <div class="grid">
           <div class="key bold">Mission</div>
           <div class="key bold">Played</div>
@@ -128,7 +162,7 @@
           <div id="domination-amount" class="value">-</div>
           <div id="domination-ratio" class="value">-</div>
           <div id="domination-average" class="value">-</div>
-          <div class="value">Onslaugt</div>
+          <div class="value">Onslaught</div>
           <div id="onslaught-amount" class="value">-</div>
           <div id="onslaught-ratio" class="value">-</div>
           <div id="onslaught-average" class="value">-</div>
@@ -152,10 +186,10 @@
           <div id="annihilation-amount" class="value">-</div>
           <div id="annihilation-ratio" class="value">-</div>
           <div id="annihilation-average" class="value">-</div>
-          <div class="value">All</div>
-          <div id="all-amount" class="value">-</div>
-          <div id="all-ratio" class="value">-</div>
-          <div id="all-average" class="value">-</div>
+          <div class="value all">All</div>
+          <div id="all-amount" class="value all">-</div>
+          <div id="all-ratio" class="value all">-</div>
+          <div id="all-average" class="value all">-</div>
         </div>
       </div>
     </div>

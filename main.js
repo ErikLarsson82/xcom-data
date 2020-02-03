@@ -9,7 +9,14 @@ const formatTime = d3.timeFormat("%b %d")
 let showVanilla = true,
   showEvolution = true,
   showCargo = true,
-  showTog = true
+  showTog = true,
+  showOccupation = true,
+  showOnslaught = true,
+  showInfiltration = true,
+  showMisdirection = true,
+  showDomination = true
+
+  
 
 const svg = initGraph()
 
@@ -27,6 +34,7 @@ function setIcons() {
   document.getElementById("exalt").className = opacity("icon")(showEvolution)
   document.getElementById("cargo").className = opacity("button")(showCargo)
   document.getElementById("tog").className = opacity("button")(showTog)
+  document.getElementById("occupation-checkbox").innerHTML = showOccupation ? '[X]' : '[ ]'
 }
 
 function initGraph() {
@@ -96,7 +104,40 @@ const hiddenData = x => {
   if (!showTog && x.group === '👪') {
     return false
   }
+  if (!showOccupation && x.mission === 'Occupation') {
+    return false
+  }
+  if (!showOnslaught && x.mission === 'Onslaught') {
+    return false
+  }
+  if (!showInfiltration && x.mission === 'Infiltration') {
+    return false
+  }
+  if (!showMisdirection && x.mission === 'Misdirection') {
+    return false
+  }
+  if (!showDomination && x.mission === 'Domination') {
+    return false
+  }
   return true
+}
+
+function allCheckboxes() {
+  if (!showOccupation) {
+    document.getElementById("select-all-checkbox").innerHTML = '[X]'
+    showOccupation = true
+    showOnslaught = true
+    showInfiltration = true
+    showMisdirection = true
+    showDomination = true
+  } else {
+    document.getElementById("select-all-checkbox").innerHTML = '[ ]'
+    showOccupation = false
+    showOnslaught = false
+    showInfiltration = false
+    showMisdirection = false
+    showDomination = false
+  }
 }
 
 function renderGraph(_data) {
@@ -147,7 +188,7 @@ function renderGraph(_data) {
 
   const y = d3.scaleLinear()
     .domain([min, 100])
-    .range([height + 30, margin.top])
+    .range([height + 10, margin.top])
 
   svg.select(".x-axis")
       .call(d3.axisBottom(x).tickFormat(i => formatTime(data[i].date)).ticks(data.length))
@@ -220,16 +261,6 @@ function renderGraph(_data) {
   */ 
 
   svg.select(".content")
-    .selectAll("image")
-    .data(data, x=>`${x.i}`)
-    .join("image")
-      .attr("x", (d, i) => x(i) + (x.bandwidth() / 2) - 8)
-      .attr("y", (d, i) => y(min - 20))
-      .attr("href", d => d.game === 'vanilla' ? 'xcom.png' : 'exalt-logo.png')
-      .attr("width", "20")
-      .attr("height", "20")
-
-  svg.select(".content")
     .selectAll(".player-icons")
     .data(data, x=>`${x.i}`)
     .join("text")
@@ -239,4 +270,27 @@ function renderGraph(_data) {
       .attr("fill", d => d.group === '👤' ? '#ef14ef' : 'white')
       .style("text-anchor", "middle")
       .text(d => d.group)
+
+  svg.select(".content")
+    .selectAll(".match-icons")
+    .data(data, x=>`${x.i}`)
+    .join("image")
+      .attr("class", "match-icons")
+      .attr("x", (d, i) => x(i) + (x.bandwidth() / 2) - 8)
+      .attr("y", (d, i) => y(min - 19))
+      .attr("href", d => d.game === 'vanilla' ? 'xcom.png' : 'exalt-logo.png')
+      .attr("width", "20")
+      .attr("height", "20")
+
+  svg.select(".content")
+    .selectAll(".mission-icons")
+    .data(data, x=>`${x.i}`)
+    .join("image")
+      .attr("class", "mission-icons")
+      .attr("x", (d, i) => x(i) + (x.bandwidth() / 2) - 8)
+      .attr("y", (d, i) => y(min - 30))
+      .attr("href", d => `mission-icon-${d.mission === '-' ? 'unknown' : d.mission }.png`)
+      .attr("width", "20")
+      .attr("height", "20")
+
 }

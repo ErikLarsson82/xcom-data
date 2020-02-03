@@ -53,7 +53,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.3fr 1fr 1fr 1fr 1fr;
     overflow: hidden;
   }
 
@@ -122,6 +122,10 @@
     cursor: pointer;
   }
 
+  .checkbox:hover {
+    cursor: pointer;
+  }
+
   .all {
     margin-top: 20px;
   }
@@ -154,38 +158,47 @@
       </div>
       <div id="stats-container">
         <div class="grid">
+          <div id="select-all-checkbox" class="key bold checkbox" onClick="allCheckboxes(); render()">[X]</div>
           <div class="key bold">Mission</div>
           <div class="key bold">Played</div>
           <div class="key bold">Win/Loss ratio</div>
           <div class="key bold">Average score</div>
+          <div class="key bold">[ ]</div>
           <div class="value">Domination</div>
           <div id="domination-amount" class="value">-</div>
           <div id="domination-ratio" class="value">-</div>
           <div id="domination-average" class="value">-</div>
+          <div class="key bold">[ ]</div>
           <div class="value">Onslaught</div>
           <div id="onslaught-amount" class="value">-</div>
           <div id="onslaught-ratio" class="value">-</div>
           <div id="onslaught-average" class="value">-</div>
+          <div id="occupation-checkbox" class="key bold checkbox" onClick="showOccupation = !showOccupation; render()">[ ]</div>
           <div class="value">Occupation</div>
           <div id="occupation-amount" class="value">-</div>
           <div id="occupation-ratio" class="value">-</div>
           <div id="occupation-average" class="value">-</div>
+          <div class="key bold">[ ]</div>
           <div class="value">Infiltration</div>
           <div id="infiltration-amount" class="value">-</div>
           <div id="infiltration-ratio" class="value">-</div>
           <div id="infiltration-average" class="value">-</div>
+          <div class="key bold">[ ]</div>
           <div class="value">Misdirection</div>
           <div id="misdirection-amount" class="value">-</div>
           <div id="misdirection-ratio" class="value">-</div>
           <div id="misdirection-average" class="value">-</div>
+          <div class="key bold">[ ]</div>
           <div class="value">Supression</div>
           <div id="supression-amount" class="value">-</div>
           <div id="supression-ratio" class="value">-</div>
           <div id="supression-average" class="value">-</div>
+          <div class="key bold">[ ]</div>
           <div class="value">Annihilation</div>
           <div id="annihilation-amount" class="value">-</div>
           <div id="annihilation-ratio" class="value">-</div>
           <div id="annihilation-average" class="value">-</div>
+          <div class="key bold all">[ ]</div>
           <div class="value all">All</div>
           <div id="all-amount" class="value all">-</div>
           <div id="all-ratio" class="value all">-</div>

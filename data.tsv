@@ -32,7 +32,13 @@ date	score	group	mission	game	difficulty	mechtoids
 19-Jan-20	53	👪	Domination	evolution	hard	false
 20-Jan-20	LOSS	👤	Misdirection	evolution	expert	true
 20-Jan-20	DNF	👤	Misdirection	evolution	expert	true
-22-Jan-20	-48	👤	Onslaugt	evolution	expert	true
+22-Jan-20	-48	👤	Onslaught	evolution	expert	true
+22-Jan-20	-41	👤	Occupation	evolution	expert	true
+26-Jan-20	-68	👪	Supression	evolution	expert	false
+26-Jan-20	57	👪	Infiltration	evolution	hard	false
+26-Jan-20	LOSS	👪	Infiltration	evolution	expert	false
+26-Jan-20	LOSS	👪	Onslaught	evolution	hard	false
+26-Jan-20	-64	👪	Supression	evolution	normal	false
 11-Jul-20	LOSS	👪	Supression	evolution	hard	true	
 11-Jul-20	WIN	👪	Domination	evolution	normal	false
 11-Jul-20	LOSS	👪	Supression	evolution	hard	true 

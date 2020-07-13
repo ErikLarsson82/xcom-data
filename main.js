@@ -36,7 +36,13 @@ function setIcons() {
   document.getElementById("exalt").className = opacity("icon")(showEvolution)
   document.getElementById("cargo").className = opacity("button")(showCargo)
   document.getElementById("tog").className = opacity("button")(showTog)
+
+  document.getElementById("domination-checkbox").innerHTML = showDomination ? '[X]' : '[ ]'
+  document.getElementById("onslaught-checkbox").innerHTML = showOnslaught ? '[X]' : '[ ]'
   document.getElementById("occupation-checkbox").innerHTML = showOccupation ? '[X]' : '[ ]'
+  document.getElementById("infiltration-checkbox").innerHTML = showInfiltration ? '[X]' : '[ ]'
+  document.getElementById("misdirection-checkbox").innerHTML = showMisdirection ? '[X]' : '[ ]'
+  document.getElementById("supression-checkbox").innerHTML = showSupression ? '[X]' : '[ ]'
 }
 
 function initGraph() {

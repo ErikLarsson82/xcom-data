@@ -14,7 +14,7 @@ const data = d3.tsv("data.tsv", function(d, i) {
 }).then(data => {
 
   const missions = [
-    "Onslaugt",
+    "Onslaught",
     "Occupation",
     "Infiltration",
     "Misdirection",

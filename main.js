@@ -14,7 +14,9 @@ let showVanilla = true,
   showOnslaught = true,
   showInfiltration = true,
   showMisdirection = true,
-  showDomination = true
+  showDomination = true,
+  showSupression = true,
+  showUnknown = true
 
   
 
@@ -119,6 +121,12 @@ const hiddenData = x => {
   if (!showDomination && x.mission === 'Domination') {
     return false
   }
+  if (!showSupression && x.mission === 'Supression') {
+    return false
+  }
+  if (!showUnknown && x.mission === '-') {
+    return false
+  }
   return true
 }
 
@@ -130,6 +138,8 @@ function allCheckboxes() {
     showInfiltration = true
     showMisdirection = true
     showDomination = true
+    showSupression = true
+    showUnknown = true
   } else {
     document.getElementById("select-all-checkbox").innerHTML = '[ ]'
     showOccupation = false
@@ -137,6 +147,8 @@ function allCheckboxes() {
     showInfiltration = false
     showMisdirection = false
     showDomination = false
+    showSupression = false
+    showUnknown = false
   }
 }
 
